@@ -1,0 +1,60 @@
+{
+    "num_fuel_batches": 47,
+    "recent_batch_data": [
+        {
+            "bus_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "route_name": "25 UBC",
+            "reporting_timestamp": "2016-08-29T09:12:33.001Z",
+            "readings": [
+                {
+                    "fuel_litres": 2.3,
+                    "recorded_timestamp": "2016-08-29T09:12:33.001Z"
+                }
+            ]
+        },
+        {
+            "bus_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "route_name": "25 UBC",
+            "reporting_timestamp": "2016-08-29T09:12:33.001Z",
+            "readings": [
+                {
+                    "fuel_litres": 2.3,
+                    "recorded_timestamp": "2016-08-29T09:12:33.001Z"
+                }
+            ]
+        },
+        {
+            "bus_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "route_name": "25 UBC",
+            "reporting_timestamp": "2016-08-29T09:12:33.001Z",
+            "readings": [
+                {
+                    "fuel_litres": 2.3,
+                    "recorded_timestamp": "2016-08-29T09:12:33.001Z"
+                }
+            ]
+        },
+        {
+            "bus_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "route_name": "25 UBC",
+            "reporting_timestamp": "2016-08-29T09:12:33.001Z",
+            "readings": [
+                {
+                    "fuel_litres": 2.3,
+                    "recorded_timestamp": "2016-08-29T09:12:33.001Z"
+                }
+            ]
+        },
+        {
+            "bus_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "route_name": "25 UBC",
+            "reporting_timestamp": "2016-08-29T09:12:33.001Z",
+            "readings": [
+                {
+                    "fuel_litres": 2.3,
+                    "recorded_timestamp": "2016-08-29T09:12:33.001Z"
+                }
+            ]
+        }
+    ]
+}

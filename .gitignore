@@ -1,0 +1,6 @@
+*.7z
+*/venv
+*/__pycache__/
+app.log
+bus_data.json
+reciever/bus_api

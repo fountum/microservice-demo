@@ -1,0 +1,6 @@
+version: 1
+events:
+  ridership:
+    http://localhost:8090/bus/ridership
+  fuel:
+    http://localhost:8090/bus/fuel

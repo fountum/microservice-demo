@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  description: This API receives bus data from a transit system in a large metropolitian city.
+  version: "1.0.0"
+  title: Bus API
+  contact:
+    email: sduong9@my.bcit.ca
+paths:
+  /stats:
+    get:
+      summary: Gets stats generated from fuel and ridership data
+      operationId: app.get_stats
+      description: Gets stats generated from fuel and ridership data
+      responses:
+        "200":
+          description: Successfully return a stat object
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/ReadingStats"
+        "400":
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    ReadingStats:
+      required:
+      - num_ridership_readings
+      - avg_ridership
+      - min_fuel_litres
+      - max_fuel_litres
+      - num_fuel_readings
+      - last_updated
+      properties:
+        num_ridership_readings:
+          type: integer
+          example: 50000
+        avg_ridership:
+          type: number
+          example: 45.0
+        num_fuel_readings:
+          type: integer
+          example: 50000
+        min_fuel_litres:
+          type: number 
+          example: 45.0
+        max_fuel_litres:
+          type: number 
+          example: 45.0
+      type: object

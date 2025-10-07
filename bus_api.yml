@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  description: This API receives bus data from a transit system in a large metropolitian city.
+  version: "1.0.0"
+  title: Bus API
+  contact:
+    email: sduong9@my.bcit.ca
+paths:
+  /bus/ridership:
+    post:
+      summary: Reports a batch of bus ridership data.
+      operationId: app.report_ridership_reading
+      description: Adds a batch of ridership data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RidershipReadingBatch'
+      responses:
+        '201':
+          description: batch successfully received
+        '400':
+          description: 'invalid input, object invalid'
+    
+  /bus/fuel:
+    post:
+      summary: Reports a batch of fuel gauge readings.
+      operationId: app.report_fuel_reading
+      description: Adds a batch of fuel gauge readings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FuelReadingBatch'
+      responses:
+        '201':
+          description: batch successfully received
+        '400':
+          description: 'invalid input, object invalid'
+
+components:
+  schemas:
+    RidershipReadingBatch:
+      required:
+      - bus_id
+      - route_name
+      - reporting_timestamp
+      - readings
+      properties:
+        bus_id:
+          type: string
+          format: uuid
+          examples: 
+            - "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        route_name:
+          type: string
+          examples: 
+            - "25 UBC"
+        reporting_timestamp:
+          type: string
+          format: date-time
+          examples: 
+            - "2016-08-29T09:12:33.001Z"
+        readings:
+          type: array
+          ref: "#/schemas/components/RidershipReading"
+          examples:
+            -
+              - { stop_id: 25519, passengers_boarded: 7, recorded_timestamp: "2025-08-29T09:12:33.001Z" }
+              - { stop_id: 51534, passengers_boarded: 25, recorded_timestamp: "2025-08-29T09:56:33.001Z" }
+      type: object
+
+    TemperatureReading:
+      required:
+        - stop_id
+        - passengers_boarded
+        - recorded_timestamp
+      properties:
+            stop_id:
+              type: number
+              examples:
+                - 25519
+                - 51534
+            passengers_boarded:
+              type: number
+              examples:
+                - 7
+                - 25
+            recorded_timestamp:
+              type: string
+              format: date-time
+              examples: 
+                - "2016-08-29T09:12:33.001Z"
+      type: object
+
+    FuelReadingBatch:
+      required:
+      - bus_id
+      - route_name
+      - reporting_timestamp
+      - readings
+      properties:
+        bus_id:
+          type: string
+          format: uuid
+          examples: 
+            - "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        route_name:
+          type: string
+          examples: 
+            - "25 UBC"
+        reporting_timestamp:
+          type: string
+          format: date-time
+          examples: 
+            - "2016-08-29T09:12:33.001Z"
+        readings:
+          type: array
+          $ref: '#/components/schemas/FuelReading'
+          examples:
+            -
+              - { fuel_litres: 11.2, recorded_timestamp: "2025-08-29T09:12:33.001Z" }
+              - { fuel_litres: 9.5, recorded_timestamp: "2025-08-29T09:56:33.001Z" }
+      type: object
+
+    FuelReading:
+      required:
+        - fuel_litres
+        - recorded_timestamp
+      properties:
+        fuel_litres:
+          type: number
+          examples:
+            - 2.3
+            - 31.5
+        recorded_timestamp:
+          type: string
+          format: date-time
+          examples: 
+            - "2016-08-29T09:12:33.001Z"
+      type: object

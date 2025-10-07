@@ -1,0 +1,10 @@
+version: 1
+datastore: 
+  filename: bus_data.json
+scheduler:
+  interval: 5
+eventstores:
+  ridership:
+    url: http://localhost:8090/bus/ridership
+  fuel:
+    url: http://localhost:8090/bus/fuel

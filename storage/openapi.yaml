@@ -1,0 +1,167 @@
+openapi: 3.0.3
+info:
+  description: This API receives bus data from a transit system in a large metropolitian city.
+  version: "1.0.0"
+  title: Bus API
+  contact:
+    email: sduong9@my.bcit.ca
+paths:
+  /bus/ridership:
+    post:
+      summary: Reports a batch of bus ridership data.
+      operationId: app.report_ridership_reading
+      description: Adds a batch of ridership data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RidershipReading'
+      responses:
+        '201':
+          description: data successfully received
+        '400':
+          description: 'invalid input, object invalid'
+    get:
+      summary: Gets a batch of bus ridership data in a certain period of time
+      operationId: app.get_ridership_reading
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Start of date range
+          schema:
+            type: string
+            format: date-time 
+            example: 2016-08-29 09:12:33
+        - name: end_timestamp
+          in: query
+          description: End of date range
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29 09:12:33
+      responses:
+        '200':
+          description: Successfully returned an array of bus ridership data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RidershipReading"
+
+    
+  /bus/fuel:
+    post:
+      summary: Reports a batch of fuel gauge readings.
+      operationId: app.report_fuel_reading
+      description: Adds a batch of fuel gauge readings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FuelReading'
+      responses:
+        '201':
+          description: data successfully received
+        '400':
+          description: 'invalid input, object invalid'
+    get:
+      summary: Gets a batch of bus fuel data in a certain period of time
+      operationId: app.get_fuel_reading
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Start of date range
+          schema:
+            type: string
+            format: date-time 
+            example: 2016-08-29 09:12:33
+        - name: end_timestamp
+          in: query
+          description: End of date range
+          schema:
+            type: string
+            format: date-time 
+            example: 2016-08-29 09:12:33
+      responses:
+        '200':
+          description: Successfully returned an array of bus fuel data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FuelReading"
+
+
+components:
+  schemas:
+    RidershipReading:
+      required:
+        - trace_id
+        - bus_id
+        - route_name
+        - stop_id
+        - passengers_boarded
+        - recorded_timestamp
+        - batch_timestamp
+      properties:
+        trace_id:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        bus_id:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        stop_id:
+          type: number
+          example: 25519
+        route_name:
+          type: string
+          example: "25 UBC"
+        passengers_boarded:
+          type: number
+          example: 7
+        recorded_timestamp:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
+        batch_timestamp:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
+      type: object
+
+    FuelReading:
+      required:
+        - trace_id
+        - bus_id
+        - route_name
+        - fuel_litres
+        - recorded_timestamp
+        - batch_timestamp
+      properties:
+        bus_id:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        bus_id:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        route_name:
+          type: string
+          example: "25 UBC"
+        fuel_litres:
+          type: number
+          example: 2.3
+        recorded_timestamp:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
+        batch_timestamp:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
+      type: object

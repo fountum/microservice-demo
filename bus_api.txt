@@ -1,0 +1,11 @@
+bus_api
+
+This system collects ridership data from busses servicing a large metropolitan area to analyze. Each bus collects data about how what stop commuters are boarding the bus and fuel consumed.
+
+The system receives batches every 30 minutes to an hour while the busses are in service. This city has a large network of busses and high population, meaning that up to 1000 batches of both types may be received at once. 
+
+The data stores will enable:
+1. Tracking of the cost-effectiveness of busses on different routes (ex. cost of fuel vs revenue from passengers)
+2. Monitoring which areas are being over/underserviced (in general or at specific times) 
+
+Users of the system are transit coordinators and city planners.

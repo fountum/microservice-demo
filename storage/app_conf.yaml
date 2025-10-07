@@ -1,0 +1,2 @@
+version: 1
+database: "mysql://bus_api:superbass@localhost/bus_data"
