@@ -1,4 +1,3 @@
-import json
 import logging.config
 import uuid
 import connexion
@@ -6,13 +5,12 @@ from connexion import NoContent
 import os
 import httpx
 import yaml
+from datetime import datetime
 
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
 
-MAX_BATCH_EVENTS = 5
-RIDERSHIP_FILE = 'ridership.json'
-FUEL_FILE = 'fuel.json'
+DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
 
 # load configs
 with open('app_conf.yaml', 'r') as f:
@@ -25,43 +23,18 @@ with open('log_conf.yaml', 'r') as f:
 # logging
 logger = logging.getLogger('basicLogger')
 
-# /bus/ridership
-def report_ridership_reading(body):
+# /spending/report
+def report_spending(body):
     trace_id = str(uuid.uuid4())
     logger.debug(f'Recieved event ridership {trace_id=}')
 
-    skeleton = body.copy()
-    skeleton['trace_id']=trace_id
-    readings = skeleton.pop("readings")
+    body['reported_time'] = datetime.now().strftime(DATE_FORMAT)
+    body['trace_id'] = trace_id
+    logger.debug(f'{body=}')
     
-    for d in readings:
-        data = skeleton.copy()
-        data['recorded_timestamp']=d['recorded_timestamp']
-        data['stop_id']=d['stop_id']
-        data['passengers_boarded']=d['passengers_boarded']
-        print(data)
-        r= httpx.post(app_config['events']['ridership'],json=data)
+    r= httpx.post(app_config['events']['spending'],json=body)
         
-    logger.debug(f'Response for event ridership {trace_id=}, {r.status_code=}')
-    return NoContent,r.status_code
-
-# /bus/fuel
-def report_fuel_reading(body):
-    trace_id = str(uuid.uuid4())
-    logger.debug(f'Recieved event fuel {trace_id=}')
-
-    skeleton = body.copy()
-    readings = skeleton.pop("readings")
-    
-    for d in readings:
-        data = skeleton.copy()
-        data['trace_id']=trace_id
-        data['recorded_timestamp']=d['recorded_timestamp']
-        data['fuel_litres']=d['fuel_litres']
-        
-        r= httpx.post(app_config["events"]['fuel'],json=data)
-    logger.debug(f'Response for event fuel {trace_id=}, {r.status_code=}')
-
+    logger.debug(f'Response for event spending {trace_id=}, {r.status_code=}')
     return NoContent,r.status_code
 
 
