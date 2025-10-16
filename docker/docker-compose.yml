@@ -16,18 +16,6 @@ services:
     env_file: "mysql.env"
     volumes:
       - my-db:/var/lib/mysql
-
-  mongodb:
-    image: "mongo:4.4.20"
-    container_name: stats-db
-    restart: always
-    ports:
-      - "27017:27017"
-    env_file: "mongo.env"
-    volumes:
-      - ./mongodb/:/docker-entrypoint-initdb.d/
-      - mg-db:/data/db
-    command: mongod
   auth:
     image: "webapp:latest"
     container_name: web-app
@@ -51,4 +39,3 @@ services:
       - "8100:8100"
 volumes:
   my-db:
-  mg-db:

@@ -1,9 +1,9 @@
 version: 1
 datastore: 
-  database: mongodb://tats-db:27017/sales_stats
+  filename: sales_data.json
 date_format: "%Y-%m-%d %H:%M:%S"
 scheduler:
-  interval: 20
+  interval: 5
 eventstores:
   sales:
     url: http://storage-svc:8090/sales

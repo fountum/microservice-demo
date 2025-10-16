@@ -1,14 +1,12 @@
 from datetime import datetime
-import json
 import logging.config
-import uuid
 import connexion
 from connexion import NoContent
-import os
 import httpx
 import yaml
 from apscheduler.schedulers.background import BackgroundScheduler
-from pymongo import MongoClient,DESCENDING
+import json
+import os
 
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
@@ -21,11 +19,6 @@ with open('log_conf.yaml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
-# mongodb connection
-client = MongoClient(app_config['datastore']['database'])
-db = client['sales_stats'] # ?
-collection = db["stats"]
-
 # logging
 logger = logging.getLogger('basicLogger')
 
@@ -35,9 +28,8 @@ def populate_stats():
     today = datetime.strftime(datetime.now(), app_config['date_format'])
     # load old stats
 
-    entry = collection.find_one(sort=[( '_id', DESCENDING)])
 
-    if entry == None:
+    if not os.path.isfile(app_config["datastore"]["filename"]):
         stats = {}
         stats['num_sales_reports'] = 0
         stats['avg_income'] = 0
@@ -55,8 +47,8 @@ def populate_stats():
         
         stats['last_updated'] = "2016-01-01 00:00:00"
     else:
-        id = entry['_id']
-        stats = entry
+        with open(app_config["datastore"]["filename"], "r") as file:
+            stats = json.load(file)    
          
     
     # get data from storage service
@@ -119,13 +111,9 @@ def populate_stats():
 
     stats['last_updated'] = today
 
-    # write to MongoDB
-    collection.replace_one({'_id': id}, stats)
-        
-
     # writing to JSON
-    # with open(app_config["datastore"]["filename"], "w") as file:
-    #     json.dump(stats, file)
+    with open(app_config["datastore"]["filename"], "w") as file:
+        json.dump(stats, file)
 
     logger.info(f'Stats generation completed')
 
@@ -143,13 +131,13 @@ def init_scheduler():
 def get_stats():
     logger.info("GET request recieved")
 
-    entry = collection.find_one(sort=[( '_id', DESCENDING)])
 
-    if entry == None:
-        logger.error(f"{app_config["datastore"]["database"]} did not send data")
+    if not os.path.isfile(app_config["datastore"]["filename"]):
+        logger.error(f"{app_config["datastore"]["filename"]} does not exist")
         return "Statistics do not exist", 404
     else:
-        stats = entry
+        with open(app_config["datastore"]["filename"], "r") as file:
+            stats = json.load(file)    
 
 
     logger.debug(f'Sales stats updated: total_sales={stats['num_sales_reports']}')
@@ -158,11 +146,9 @@ def get_stats():
     logger.debug(f'cookies_sold: total={stats['total_cookies_sold']} avg={stats['avg_cookies_sold']} min={stats['min_cookies_sold']} max={stats['max_cookies_sold']}')
     logger.info(f'Request fullfilled')
 
-    stats.pop('_id')
-
     return stats,200
 
 
 if __name__ == "__main__":
     init_scheduler()
-    app.run(port=8100)
+    app.run(host='0.0.0.0', port=8100)
