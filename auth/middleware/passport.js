@@ -3,6 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const userController = require("../controller/userController");
 const { Sequelize } = require('sequelize');
 const {models, defineModels} = require('./db/models.js')
+const crypto = require('crypto');
 
 // db stuff
 const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/world');
@@ -18,7 +19,10 @@ const localLogin = new LocalStrategy(
     passwordField: "password",
   },
   async (username, password, done) => {
-    const user = await userController.getUserByEmailIdAndPassword(username, password);
+    const hash = crypto.createHash('sha256');
+    hash.update(password);
+    const hashed_password = hash.digest('hex');
+    const user = await userController.getUserByEmailIdAndPassword(username, hashed_password);
     return user
       ? done(null, user)
       : done(null, false, {
@@ -47,9 +51,13 @@ const localSignup = new LocalStrategy(
     }
 
     // create user in db
+    const hash = crypto.createHash('sha256');
+    hash.update(password);
+    const hashed_password = hash.digest('hex');
+
     const newUser = await User.create({
         username: username.toLowerCase(),
-        password: password, // HASHING
+        password: hashed_password, 
     })
 
     return done(null, newUser);
