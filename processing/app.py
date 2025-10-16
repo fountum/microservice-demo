@@ -8,12 +8,10 @@ import os
 import httpx
 import yaml
 from apscheduler.schedulers.background import BackgroundScheduler
+from pymongo import MongoClient,DESCENDING
 
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
-
-
-
 
 # loading config
 with open('app_conf.yaml', 'r') as f:
@@ -23,16 +21,23 @@ with open('log_conf.yaml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
+# mongodb connection
+client = MongoClient(app_config['datastore']['database'])
+db = client['sales_stats'] # ?
+collection = db["stats"]
+
 # logging
 logger = logging.getLogger('basicLogger')
 
 def populate_stats():
     logger.info(f'Starting routine stats generating')
 
-    today = datetime.strftime(datetime.now(), app_config['date_format']
-)
+    today = datetime.strftime(datetime.now(), app_config['date_format'])
     # load old stats
-    if not os.path.isfile(app_config["datastore"]["filename"]):
+
+    entry = collection.find_one(sort=[( '_id', DESCENDING)])
+
+    if entry == None:
         stats = {}
         stats['num_sales_reports'] = 0
         stats['avg_income'] = 0
@@ -47,12 +52,11 @@ def populate_stats():
         stats['total_income'] = 0
         stats['total_customers'] = 0
         stats['total_cookies_sold'] = 0
-
         
         stats['last_updated'] = "2016-01-01 00:00:00"
     else:
-        with open(app_config["datastore"]["filename"], "r") as file:
-            stats = json.load(file)    
+        stats = entry
+        collection.delete_one(stats) 
     
     # get data from storage service
     range = {
@@ -72,8 +76,6 @@ def populate_stats():
 
     if len(data) != 0:
         # process data
-
-
         new_income = sum([d['income'] for d in data])
         new_customers = sum([d['customers'] for d in data])
         new_cookies_sold = sum([d['cookies_sold'] for d in data])
@@ -84,9 +86,9 @@ def populate_stats():
         stats['total_customers'] += new_customers
         stats['total_cookies_sold'] += new_cookies_sold
 
-        stats['avg_income'] = stats['total_income'] 
-        stats['avg_customers'] = stats['total_customers']
-        stats['avg_cookies_sold'] = stats['total_cookies_sold']
+        stats['avg_income'] = stats['total_income'] / stats['num_sales_reports']
+        stats['avg_customers'] = stats['total_customers'] / stats['num_sales_reports']
+        stats['avg_cookies_sold'] = stats['total_cookies_sold'] / stats['num_sales_reports']
 
         # max 
         for d in data:
@@ -116,9 +118,13 @@ def populate_stats():
 
     stats['last_updated'] = today
 
+    # write to MongoDB
+    collection.insert_one(stats)
+        
+
     # writing to JSON
-    with open(app_config["datastore"]["filename"], "w") as file:
-        json.dump(stats, file)
+    # with open(app_config["datastore"]["filename"], "w") as file:
+    #     json.dump(stats, file)
 
     logger.info(f'Stats generation completed')
 
