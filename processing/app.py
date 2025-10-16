@@ -119,7 +119,7 @@ def populate_stats():
     stats['last_updated'] = today
 
     # write to MongoDB
-    collection.delete_one(stats)
+    collection.delete_one(entry)
     collection.insert_one(stats)
         
 
