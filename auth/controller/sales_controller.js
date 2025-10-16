@@ -31,7 +31,7 @@ let salesController = {
       return;
     } 
 
-    axios.post('http://localhost:8080/sales', {
+    axios.post('http://processing-svc:8080/sales', {
       customers : parseInt(req.body.customers),
       cookies_sold : parseInt(req.body.cookies),
       income : parseInt(req.body.income)
