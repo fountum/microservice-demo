@@ -2,6 +2,8 @@ services:
   web-svr:
     image: "caddy:latest"
     container_name: web-server
+    depends_on:
+      - auth 
     volumes:
       - "${PWD}/caddy_conf:/etc/caddy"
     ports:
@@ -16,25 +18,39 @@ services:
     env_file: "mysql.env"
     volumes:
       - my-db:/var/lib/mysql
+  
   auth:
     image: "webapp:latest"
     container_name: web-app
+    depends_on:
+      - mysql
+      - receiver
     env_file: "app.env"
     ports:
       - "3001:3001"
+
+
   receiver:
     image: "receiver-svc:latest"
     container_name: receiver-svc
+    depends_on:
+      - storage
     ports:
       - "8080:8080"
+  
   storage:
     image: "storage-svc:latest"
     container_name: storage-svc
+    depends_on:
+      - mysql
     ports: 
       - "8090:8090"
+
   processing:
     image: "processing-svc:latest"
     container_name: processing-svc
+    depends_on:
+      - storage
     ports:
       - "8100:8100"
 volumes:
