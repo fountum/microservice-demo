@@ -6,7 +6,7 @@ const {models, defineModels} = require('./db/models.js')
 const crypto = require('crypto');
 
 // db stuff
-const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/auth_db');
+const sequelize = new Sequelize(process.env.MYSQL_CONN);
 const User = defineModels(sequelize)
 
 // const { PrismaClient } = require('@prisma/client');
