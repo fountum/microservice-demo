@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-let saleController = {
+let salesController = {
   stats: async (req, res) => {
     if (!req.user){
       res.redirect('/login');
