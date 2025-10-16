@@ -1,6 +1,6 @@
 version: 1
 datastore: 
-  database: mongodb://processing_api:dubsowl@stats-db:27017/sales_stats
+  database: mongodb://tats-db:27017/sales_stats
 date_format: "%Y-%m-%d %H:%M:%S"
 scheduler:
   interval: 20

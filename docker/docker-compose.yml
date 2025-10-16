@@ -1,28 +1,54 @@
 services:
   web-svr:
-    image: "nginx:latest"
+    image: "caddy:latest"
     container_name: web-server
+    volumes:
+      - "${PWD}/caddy_conf:/etc/caddy"
     ports:
       - "80:80"
+
   mysql:
-    image: "mysql:latest"
-    container_name: service_db
+    image: "mysql_custom:latest"
+    container_name: service-db
     restart: always
     ports: 
       - "3306:3306"
     env_file: "mysql.env"
     volumes:
-      - my-db:/data/mysql
+      - my-db:/var/lib/mysql
+
   mongodb:
-    image: "mongodb-community-server:latest"
-    contaienr_name: user_db
+    image: "mongo:4.4.20"
+    container_name: stats-db
     restart: always
-    ports: 
+    ports:
       - "27017:27017"
     env_file: "mongo.env"
     volumes:
-      - mg-db:/data/mongo
+      - ./mongodb/:/docker-entrypoint-initdb.d/
+      - mg-db:/data/db
+    command: mongod
+  auth:
+    image: "webapp:latest"
+    container_name: web-app
+    env_file: "app.env"
+    ports:
+      - "3001:3001"
   receiver:
+    image: "receiver-svc:latest"
+    container_name: receiver-svc
+    ports:
+      - "8080:8080"
+  storage:
+    image: "storage-svc:latest"
+    container_name: storage-svc
+    ports: 
+      - "8090:8090"
+  processing:
+    image: "processing-svc:latest"
+    container_name: processing-svc
+    ports:
+      - "8100:8100"
 volumes:
   my-db:
   mg-db:

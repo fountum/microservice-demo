@@ -7,7 +7,7 @@ let salesController = {
       return;
     } 
     
-    const stats_res = await axios.get('http://localhost:8100/stats');
+    const stats_res = await axios.get('http://processing-svc:8100/stats');
     if (stats_res.status != 200) {
       console.log(stats_res.statusText);
       return;
