@@ -142,18 +142,22 @@ def init_scheduler():
 def get_stats():
     logger.info("GET request recieved")
 
-    if not os.path.isfile(app_config["datastore"]["filename"]):
-        logger.error(f"{app_config["datastore"]["filename"]} does not exist")
+    entry = collection.find_one(sort=[( '_id', DESCENDING)])
+
+    if entry == None:
+        logger.error(f"{app_config["datastore"]["database"]} did not send data")
         return "Statistics do not exist", 404
     else:
-        with open(app_config["datastore"]["filename"], "r") as file:
-            stats = json.load(file)    
+        stats = entry
+
 
     logger.debug(f'Sales stats updated: total_sales={stats['num_sales_reports']}')
     logger.debug(f'Income: total={stats['total_income']} avg={stats['avg_income']} min={stats['min_income']} max={stats['max_income']}')
     logger.debug(f'customers: total={stats['total_customers']} avg={stats['avg_customers']} min={stats['min_customers']} max={stats['max_customers']}')
     logger.debug(f'cookies_sold: total={stats['total_cookies_sold']} avg={stats['avg_cookies_sold']} min={stats['min_cookies_sold']} max={stats['max_cookies_sold']}')
     logger.info(f'Request fullfilled')
+
+    stats.pop('_id')
 
     return stats,200
 
