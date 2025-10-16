@@ -11,7 +11,7 @@ let authController = {
 
   loginSubmit: 
     passport.authenticate("local", {
-    successRedirect: "https://youtube.com",
+    successRedirect: "/sales/stats",
     failureRedirect: "/login",
   }),
 

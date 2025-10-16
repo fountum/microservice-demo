@@ -4,7 +4,6 @@ const userController = require("../controller/userController");
 const { Sequelize } = require('sequelize');
 const {models, defineModels} = require('./db/models.js')
 
-
 // db stuff
 const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/world');
 const User = defineModels(sequelize)
