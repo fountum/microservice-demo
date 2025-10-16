@@ -1,4 +1,4 @@
 version: 1
 events:
   sales:
-    http://localhost:8090/sales
+    http://storage-svc:8090/sales
