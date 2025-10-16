@@ -4,3 +4,10 @@
 app.log
 bus_data.json
 reciever/bus_api
+
+auth/controller/reminder_controller.js
+auth/node_modules
+auth/views/reminder/*
+auth/.env
+auth/package-lock.json
+auth/README.md
