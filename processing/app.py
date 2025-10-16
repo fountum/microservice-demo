@@ -55,6 +55,7 @@ def populate_stats():
         
         stats['last_updated'] = "2016-01-01 00:00:00"
     else:
+        id = entry['_id']
         stats = entry
          
     
@@ -63,7 +64,7 @@ def populate_stats():
         "start_timestamp":datetime.strptime(stats["last_updated"], app_config['date_format']),
         "end_timestamp": today
     }
-    
+
         
     res = httpx.get(app_config['eventstores']['sales']['url'], params=range)
 
@@ -119,8 +120,7 @@ def populate_stats():
     stats['last_updated'] = today
 
     # write to MongoDB
-    collection.delete_one(entry)
-    collection.insert_one(stats)
+    collection.replace_one({'_id': id}, stats)
         
 
     # writing to JSON
