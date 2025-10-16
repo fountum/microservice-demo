@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/world');
+const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/auth_db');
 
 // Define modes to use in other files
 models = {
@@ -24,11 +24,6 @@ const defineModels = (conn) => {
     return User
 }
 
-// `sequelize.define` also returns the model
-// console.log(User === sequelize.models.User); // true
-
-// await sequelize.sync({ force: true });
-// console.log('All models were synchronized successfully.');
 
 module.exports = {
     models,

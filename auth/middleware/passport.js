@@ -6,7 +6,7 @@ const {models, defineModels} = require('./db/models.js')
 const crypto = require('crypto');
 
 // db stuff
-const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/world');
+const sequelize = new Sequelize('mysql://auth_svc:WORMSandDIRTandSAND@localhost:3306/auth_db');
 const User = defineModels(sequelize)
 
 // const { PrismaClient } = require('@prisma/client');
@@ -19,10 +19,7 @@ const localLogin = new LocalStrategy(
     passwordField: "password",
   },
   async (username, password, done) => {
-    const hash = crypto.createHash('sha256');
-    hash.update(password);
-    const hashed_password = hash.digest('hex');
-    const user = await userController.getUserByEmailIdAndPassword(username, hashed_password);
+    const user = await userController.getUserByEmailIdAndPassword(username, password);
     return user
       ? done(null, user)
       : done(null, false, {
