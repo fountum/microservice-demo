@@ -6,7 +6,7 @@ info:
   contact:
     email: sduong9@my.bcit.ca
 paths:
-  /spending/:
+  /spending:
     post:
       summary: Reports spending data.
       operationId: app.report_spending
@@ -58,15 +58,15 @@ components:
         - spending
         - reported_time
       properties:
-            trace_id:
-              type: string
-              format: uuid
-              example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-            spending:
-              type: number
-              example: 9999.00
-            reported_time:
-              type: string
-              format: date-time
-              example: "2016-08-29 09:12:33"
+        trace_id:
+          type: string
+          format: uuid
+          example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        spending:
+          type: number
+          example: 9999.00
+        reported_time:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
       type: object

@@ -8,9 +8,9 @@ info:
 paths:
   /stats:
     get:
-      summary: Gets stats generated from fuel and ridership data
+      summary: Gets stats generated spending data
       operationId: app.get_stats
-      description: Gets stats generated from fuel and ridership data
+      description: Gets stats generated from spending data
       responses:
         "200":
           description: Successfully return a stat object
@@ -34,26 +34,26 @@ components:
   schemas:
     ReadingStats:
       required:
-      - num_ridership_readings
-      - avg_ridership
-      - min_fuel_litres
-      - max_fuel_litres
-      - num_fuel_readings
+      - num_spending_reports
+      - avg_spending
+      - max_spending
+      - total_spending
       - last_updated
       properties:
-        num_ridership_readings:
+        num_spending_reports:
           type: integer
           example: 50000
-        avg_ridership:
+        avg_spending:
           type: number
           example: 45.0
-        num_fuel_readings:
-          type: integer
-          example: 50000
-        min_fuel_litres:
-          type: number 
+        max_spending:
+          type: number
           example: 45.0
-        max_fuel_litres:
-          type: number 
+        total_spending:
+          type: number
           example: 45.0
+        last_updated:
+          type: string
+          format: date-time
+          example: "2016-08-29 09:12:33"
       type: object

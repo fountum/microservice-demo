@@ -24,6 +24,6 @@ class Spending(Base):
         return { 
             'trace_id': self.trace_id,
             'spending': self.spending,
-            "reported_time": datetime.strftime(self.recorded_timestamp, app_config['date_format']),
+            "reported_time": datetime.strftime(self.reported_time, app_config['date_format']),
         }
 
