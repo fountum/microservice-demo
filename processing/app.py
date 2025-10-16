@@ -56,7 +56,7 @@ def populate_stats():
         stats['last_updated'] = "2016-01-01 00:00:00"
     else:
         stats = entry
-        collection.delete_one(stats) 
+         
     
     # get data from storage service
     range = {
@@ -119,6 +119,7 @@ def populate_stats():
     stats['last_updated'] = today
 
     # write to MongoDB
+    collection.delete_one(stats)
     collection.insert_one(stats)
         
 
