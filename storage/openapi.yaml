@@ -2,28 +2,28 @@ openapi: 3.0.3
 info:
   description: This API receives bus data from a transit system in a large metropolitian city.
   version: "1.0.0"
-  title: Spending API
+  title: Sales API
   contact:
     email: sduong9@my.bcit.ca
 paths:
-  /spending:
+  /sales:
     post:
-      summary: Reports spending data.
-      operationId: app.report_spending
-      description: Adds spending data
+      summary: Reports sales data.
+      operationId: app.report_sales
+      description: Adds sales data
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SpendingReport'
+              $ref: '#/components/schemas/SalesReport'
       responses:
         '201':
           description: batch successfully received
         '400':
           description: 'invalid input, object invalid'
     get:
-      summary: Gets a batch of spending data in a certain period of time
-      operationId: app.get_spending
+      summary: Gets a batch of sales data in a certain period of time
+      operationId: app.get_sales
       parameters:
         - name: start_timestamp
           in: query
@@ -41,28 +41,36 @@ paths:
             example: 2016-08-29 09:12:33
       responses:
         '200':
-          description: Successfully returned an array of bus ridership data
+          description: Successfully returned an array of sale data
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/SpendingReport"
+                  $ref: "#/components/schemas/SalesReport"
 
 
 components:
   schemas:
-    SpendingReport:
+    SalesReport:
       required:
         - trace_id
-        - spending
+        - customers
+        - cookies_sold
+        - income
         - reported_time
       properties:
         trace_id:
           type: string
           format: uuid
           example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-        spending:
+        customers:
+          type: integer
+          example: 7777
+        cookies_sold:
+          type: integer
+          example: 8888
+        income:
           type: number
           example: 9999.00
         reported_time:

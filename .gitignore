@@ -2,7 +2,8 @@
 */venv
 */__pycache__/
 app.log
-spending_data.json
+sales_data.json
+mongodb_cmd.md
 reciever/bus_api
 
 auth/controller/reminder_controller.js

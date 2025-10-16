@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 import yaml
 import logging.config
-from models import Spending
+from models import Sale
 
 # loading config
 with open('app_conf.yaml', 'r') as f:
@@ -28,12 +28,14 @@ logger=logging.getLogger('basicLogger')
 
 DATE_FORMAT = app_config['date_format']
 
-def report_spending(body):
+def report_sales(body):
     session = make_session()
 
-    event = Spending(
+    event = Sale(
         trace_id=body['trace_id'],
-        spending = body['spending'],
+        customers=body['customers'],
+        cookies_sold=body['cookies_sold'],
+        income=body['income'],
         reported_time = body['reported_time']  
     )
 
@@ -41,21 +43,20 @@ def report_spending(body):
     session.commit()
     session.close()
 
-    logger.debug(f'Stored event spending trace_id={body['trace_id']}')
+    logger.debug(f'Stored event sale trace_id={body['trace_id']}')
     return NoContent,201
 
-def get_spending(start_timestamp, end_timestamp):
+def get_sales(start_timestamp, end_timestamp):
     session = make_session()
     start = datetime.strptime(start_timestamp, DATE_FORMAT)
     end = datetime.strptime(end_timestamp, DATE_FORMAT)
 
-    statement = select(Spending).where(Spending.date_created >= start).where(Spending.date_created < end)
-    print(str(statement))
+    statement = select(Sale).where(Sale.date_created >= start).where(Sale.date_created < end)
     results = [result.to_dict() for result in session.execute(statement).scalars().all()] 
 
     session.close()
 
-    logger.debug("Found %d Spending readings (start: %s, end: %s)", len(results), start, end)
+    logger.debug("Found %d Sales readings (start: %s, end: %s)", len(results), start, end)
 
     return results
 

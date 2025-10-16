@@ -1,9 +1,9 @@
 version: 1
 datastore: 
-  filename: spending_data.json
+  filename: sales_data.json
 date_format: "%Y-%m-%d %H:%M:%S"
 scheduler:
   interval: 5
 eventstores:
-  spending:
-    url: http://localhost:8090/spending
+  sales:
+    url: http://localhost:8090/sales

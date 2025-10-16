@@ -34,10 +34,20 @@ def populate_stats():
     # load old stats
     if not os.path.isfile(app_config["datastore"]["filename"]):
         stats = {}
-        stats['num_spending_reports'] = 0
-        stats['avg_spending'] = 0
-        stats['max_spending'] = 0
-        stats['total_spending'] = 0
+        stats['num_sales_reports'] = 0
+        stats['avg_income'] = 0
+        stats['avg_customers'] = 0
+        stats['avg_cookies_sold'] = 0
+        stats['max_income'] = 0
+        stats['max_customers'] = 0
+        stats['max_cookies_sold'] = 0
+        stats['min_income'] = 999999
+        stats['min_customers'] = 999999
+        stats['min_cookies_sold'] = 999999
+        stats['total_income'] = 0
+        stats['total_customers'] = 0
+        stats['total_cookies_sold'] = 0
+
         
         stats['last_updated'] = "2016-01-01 00:00:00"
     else:
@@ -51,7 +61,7 @@ def populate_stats():
     }
     
         
-    res = httpx.get(app_config['eventstores']['spending']['url'], params=range)
+    res = httpx.get(app_config['eventstores']['sales']['url'], params=range)
 
     if res.status_code != 200:
         logger.error(f"Failed to get data, {res.status_code=}")
@@ -61,24 +71,46 @@ def populate_stats():
 
 
     if len(data) != 0:
-        # process ridership data
-        new_spending = sum([d['spending'] for d in data])
+        # process data
 
 
-        stats['total_spending'] += new_spending
-        stats['avg_spending'] = stats['total_spending'] / (stats["num_spending_reports"] + len(data))
-        
-        # new total
-        stats['num_spending_reports'] += len(data)
+        new_income = sum([d['income'] for d in data])
+        new_customers = sum([d['customers'] for d in data])
+        new_cookies_sold = sum([d['cookies_sold'] for d in data])
+
+        stats['num_sales_reports'] += len(data)
+
+        stats['total_income'] += new_income
+        stats['total_customers'] += new_customers
+        stats['total_cookies_sold'] += new_cookies_sold
+
+        stats['avg_income'] = stats['total_income'] 
+        stats['avg_customers'] = stats['total_customers']
+        stats['avg_cookies_sold'] = stats['total_cookies_sold']
 
         # max 
         for d in data:
-            if d['spending'] > stats['max_spending']:
-                stats['max_spending'] = d['spending']
+            if d['income'] > stats['max_income']:
+                stats['max_income'] = d['income']
+            if d['customers'] > stats['max_customers']:
+                stats['max_customers'] = d['customers']
+            if d['cookies_sold'] > stats['max_cookies_sold']:
+                stats['max_cookies_sold'] = d['cookies_sold']
+
+            if d['income'] < stats['min_income']:
+                stats['min_income'] = d['income']
+            if d['customers'] < stats['min_customers']:
+                stats['min_customers'] = d['customers']
+            if d['cookies_sold'] < stats['min_cookies_sold']:
+                stats['min_cookies_sold'] = d['cookies_sold']
+            
 
         
         # log stats
-        logger.debug(f'Spending stats updated: total={stats['total_spending']} avg={stats['avg_spending']} max={stats['max_spending']} total_readings={stats["num_spending_reports"]}')
+        logger.debug(f'Sales stats updated: total_sales={stats['num_sales_reports']}')
+        logger.debug(f'Income: total={stats['total_income']} avg={stats['avg_income']} min={stats['min_income']} max={stats['max_income']}')
+        logger.debug(f'customers: total={stats['total_customers']} avg={stats['avg_customers']} min={stats['min_customers']} max={stats['max_customers']}')
+        logger.debug(f'cookies_sold: total={stats['total_cookies_sold']} avg={stats['avg_cookies_sold']} min={stats['min_cookies_sold']} max={stats['max_cookies_sold']}')
     else:
         logger.debug(f"No new ridership data")
 
@@ -111,7 +143,10 @@ def get_stats():
         with open(app_config["datastore"]["filename"], "r") as file:
             stats = json.load(file)    
 
-    logger.debug(f'Stats: total={stats['total_spending']} avg={stats['avg_spending']} max={stats['max_spending']} total_readings={stats["num_spending_reports"]}')
+    logger.debug(f'Sales stats updated: total_sales={stats['num_sales_reports']}')
+    logger.debug(f'Income: total={stats['total_income']} avg={stats['avg_income']} min={stats['min_income']} max={stats['max_income']}')
+    logger.debug(f'customers: total={stats['total_customers']} avg={stats['avg_customers']} min={stats['min_customers']} max={stats['max_customers']}')
+    logger.debug(f'cookies_sold: total={stats['total_cookies_sold']} avg={stats['avg_cookies_sold']} min={stats['min_cookies_sold']} max={stats['max_cookies_sold']}')
     logger.info(f'Request fullfilled')
 
     return stats,200

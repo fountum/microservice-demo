@@ -10,11 +10,13 @@ with open('app_conf.yaml', 'r') as f:
 class Base(DeclarativeBase):
     pass
 
-class Spending(Base):
-    __tablename__ = "spending"
+class Sale(Base):
+    __tablename__ = "sales"
     id = mapped_column(Integer, primary_key=True)
     trace_id = mapped_column(String(36), nullable=False)
-    spending = mapped_column(Float, nullable=False)
+    customers = mapped_column(Integer, nullable=False)
+    cookies_sold = mapped_column(Integer, nullable=False)
+    income = mapped_column(Float, nullable=False)
     reported_time = mapped_column(DateTime, nullable=False)
     # DB date created
     date_created = mapped_column(DateTime, nullable=False, default=func.now())
@@ -23,7 +25,9 @@ class Spending(Base):
         # see OpenAPI documentation
         return { 
             'trace_id': self.trace_id,
-            'spending': self.spending,
+            "customers": self.customers,
+            "cookies_sold": self.cookies_sold,
+            "income": self.income,
             "reported_time": datetime.strftime(self.reported_time, app_config['date_format']),
         }
 

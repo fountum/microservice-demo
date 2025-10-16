@@ -23,18 +23,18 @@ with open('log_conf.yaml', 'r') as f:
 # logging
 logger = logging.getLogger('basicLogger')
 
-# /spending/report
-def report_spending(body):
+# /bakery
+def report_sales(body):
     trace_id = str(uuid.uuid4())
-    logger.debug(f'Recieved event ridership {trace_id=}')
+    logger.debug(f'Recieved event sales {trace_id=}')
 
     body['reported_time'] = datetime.now().strftime(DATE_FORMAT)
     body['trace_id'] = trace_id
     logger.debug(f'{body=}')
     
-    r= httpx.post(app_config['events']['spending'],json=body)
+    r= httpx.post(app_config['events']['sales'],json=body)
         
-    logger.debug(f'Response for event spending {trace_id=}, {r.status_code=}')
+    logger.debug(f'Response for event sales {trace_id=}, {r.status_code=}')
     return NoContent,r.status_code
 
 

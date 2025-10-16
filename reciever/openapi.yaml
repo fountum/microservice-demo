@@ -2,20 +2,20 @@ openapi: 3.0.3
 info:
   description: This API receives financial data from inputted by users on a webapp.
   version: "1.0.0"
-  title: Spending API
+  title: Sales Api
   contact:
     email: sduong9@my.bcit.ca
 paths:
-  /spending/:
+  /sales:
     post:
-      summary: Reports spending data.
-      operationId: app.report_spending
-      description: Adds spending data
+      summary: Reports sales data.
+      operationId: app.report_sales
+      description: Adds sales data
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SpendingReport'
+              $ref: '#/components/schemas/SalesReport'
       responses:
         '201':
           description: batch successfully received
@@ -24,11 +24,19 @@ paths:
 
 components:
   schemas:
-    SpendingReport:
+    SalesReport:
       required:
-        - spending
+        - customers
+        - cookies_sold
+        - income
       properties:
-            spending:
-              type: number
-              example: 9999.00
+        customers:
+          type: integer
+          example: 7777
+        cookies_sold:
+          type: integer
+          example: 8888
+        income:
+          type: number
+          example: 9999.00
       type: object

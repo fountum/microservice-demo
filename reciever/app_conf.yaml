@@ -1,4 +1,4 @@
 version: 1
 events:
-  spending:
-    http://localhost:8090/spending/
+  sales:
+    http://localhost:8090/sales
