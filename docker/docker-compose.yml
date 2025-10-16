@@ -1,0 +1,28 @@
+services:
+  web-svr:
+    image: "nginx:latest"
+    container_name: web-server
+    ports:
+      - "80:80"
+  mysql:
+    image: "mysql:latest"
+    container_name: service_db
+    restart: always
+    ports: 
+      - "3306:3306"
+    env_file: "mysql.env"
+    volumes:
+      - my-db:/data/mysql
+  mongodb:
+    image: "mongodb-community-server:latest"
+    contaienr_name: user_db
+    restart: always
+    ports: 
+      - "27017:27017"
+    env_file: "mongo.env"
+    volumes:
+      - mg-db:/data/mongo
+  receiver:
+volumes:
+  my-db:
+  mg-db:
