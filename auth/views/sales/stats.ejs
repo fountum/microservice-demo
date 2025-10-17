@@ -1,52 +1,56 @@
 <div class="container">
-    <h1 class="page-header">Reminders</h1>
+    <h1 class="page-header">Stats</h1>
     <h3>Total Reports: <%= stats.num_sales_reports %></h3>
-    <div>
-        <h3>customers</h3>
+</div>
+<% if (stats.num_sales_reports > 0)  {%>
+<div class="container" style="display:flex">
+    <div style="padding-right: 3%;">
+        <h3>Customers</h3>
         <p>
             Total: <%= stats.total_customers %>
         </p>
         <p> 
-            Min: <%= stats.min_customers %>
+            Min: <%= stats.min_customers.toPrecision(4) %>
         </p>
         <p>
-            Max: <%= stats.max_customers %>
+            Max: <%= stats.max_customers.toPrecision(4) %>
         </p>
         <p>
-            Average: <%= stats.avg_customers %>
+            Average: <%= stats.avg_customers.toPrecision(4) %>
         </p>
         
     </div>
-    <div>
-
-        <h3>cookies_sold</h3>
+    
+    <div style="padding-right: 3%;">
+        <h3>Cookies Sold</h3>
         <p>
             Total: <%= stats.total_cookies_sold %>
         </p>
         <p>
-            Min: <%= stats.min_cookies_sold %>
+            Min: <%= stats.min_cookies_sold.toPrecision(4) %>
         </p>
         <p>
-            Max: <%= stats.max_cookies_sold %>
+            Max: <%= stats.max_cookies_sold.toPrecision(4) %>
         </p>
         <p>
-            Average: <%= stats.avg_cookies_sold %>
+            Average: <%= stats.avg_cookies_sold.toPrecision(4) %>
         </p>
     </div>
     <div>
-
+        
         <h3>Income</h3>
         <p>
-            Total: <%= stats.total_income %>
+            Total: $<%= stats.total_income %>
         </p>
         <p>
-            Min: <%= stats.min_income %>
+            Min: $<%= stats.min_income.toPrecision(4) %>
         </p>
         <p>
-        Max: <%= stats.max_income %>
+        Max: $<%= stats.max_income.toPrecision(4) %>
         </p>
         <p>
-        Average: <%= stats.avg_income %>
+        Average: $<%= stats.avg_income.toPrecision(4) %>
         </p>
     </div>
+<% } %>
 </div>
