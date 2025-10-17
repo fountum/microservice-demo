@@ -4,7 +4,7 @@
 app.log
 sales_data.json
 mongodb_cmd.md
-reciever/bus_api
+receiver/bus_api
 *.env
 
 auth/controller/reminder_controller.js

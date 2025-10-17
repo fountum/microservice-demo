@@ -7,7 +7,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 # set working dir of app
 WORKDIR /home/node/app
 # copy package.json and package-lock.json
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 # switching to user "node"; provided by node image
 USER node
 # app setup
