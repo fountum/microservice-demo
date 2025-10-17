@@ -1,4 +1,5 @@
-CREATE USER "access"@"%" IDENTIFIED BY "funnygames";
+CREATE USER "sales"@"%" IDENTIFIED BY "funnygames";
+CREATE USER "auth"@"%" IDENTIFIED BY "WORMSandDIRTandSAND";
 
 CREATE DATABASE auth_db;
 USE auth_db;
@@ -11,9 +12,10 @@ CREATE TABLE `Users` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE DATABASE sales_data;
 USE sales_data;
-CREATE TABLE `Sales` (
+CREATE TABLE `sales` (
   `id` int NOT NULL AUTO_INCREMENT,
   `trace_id` varchar(36) NOT NULL,
   `customers` int NOT NULL,
@@ -24,6 +26,6 @@ CREATE TABLE `Sales` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-GRANT ALL PRIVILEGES ON auth_db.* TO "access"@"%";
-GRANT ALL PRIVILEGES ON sales_data.* TO "access"@"%";
+GRANT ALL PRIVILEGES ON auth_db.* TO "auth"@"%";
+GRANT ALL PRIVILEGES ON sales_data.* TO "sales"@"%";
 FLUSH PRIVILEGES; 
