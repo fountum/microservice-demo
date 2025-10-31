@@ -1,2 +1,6 @@
 version: 1
-database: "mysql://bus_api:superbass@localhost/bus_data"
+database: "mysql://bus_api:superbass@localhost:3306/bus_data"
+events:
+  hostname: localhost
+  port: 9092
+  topic: events

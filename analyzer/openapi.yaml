@@ -8,68 +8,69 @@ info:
 paths:
   /bus/ridership:
     get:
-      summary: Gets a batch of bus ridership data in a certain period of time
+      summary: Get a ridership event at the requested index
       operationId: app.get_ridership_reading
       parameters:
-        - name: start_timestamp
+        - name: index
           in: query
-          description: Start of date range
+          description: Index of ridership event
           schema:
-            type: string
-            format: date-time 
-            example: "2016-08-29 09:12:33"
-        - name: end_timestamp
-          in: query
-          description: End of date range
-          schema:
-            type: string
-            format: date-time
-            example: "2016-08-29 09:12:33"
-      responses:
-        "200":
-          description: Successfully returned an array of bus ridership data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/RidershipReading"
-  /bus/fuel:
-    get:
-      summary: Gets a batch of bus fuel data in a certain period of time
-      operationId: app.get_fuel_reading
-      parameters:
-        - name: start_timestamp
-          in: query
-          description: Start of date range
-          schema:
-            type: string
-            format: date-time 
-            example: "2016-08-29 09:12:33"
-        - name: end_timestamp
-          in: query
-          description: End of date range
-          schema:
-            type: string
-            format: date-time 
-            example: "2016-08-29 09:12:33"
+            type: integer 
+            example: 3
       responses:
         '200':
-          description: Successfully returned an array of bus fuel data
+          description: Successfully returned ridership data at requested index
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FuelReading"
+                type: object
+                $ref: "#/components/schemas/RidershipReading"
+        '404':
+          description: No found
+
+    
+  /bus/fuel:
+    get:
+      summary: Get a fuel dership event at the requested index
+      operationId: app.get_fuel_reading
+      parameters:
+        - name: index
+          in: query
+          description: Index of fuel event
+          schema:
+            type: integer 
+            example: 3
+      responses:
+        '200':
+          description: Successfully returned fuel data at requested index
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/FuelReading"
+        '404':
+          description: Not found
+
+  /stats:
+    get:
+      summary: Returns number of events in queue
+      operationId: app.get_stats
+      responses:
+        '200':
+          description: Successfully returned event queue stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueStats'
+
 components:
   schemas:
     RidershipReading:
       required:
         - trace_id
         - bus_id
-        - stop_id
         - route_name
+        - stop_id
         - passengers_boarded
         - recorded_timestamp
         - batch_timestamp
@@ -110,7 +111,7 @@ components:
         - recorded_timestamp
         - batch_timestamp
       properties:
-        trace_id:
+        bus_id:
           type: string
           format: uuid
           example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
@@ -133,3 +134,15 @@ components:
           format: date-time
           example: "2016-08-29 09:12:33"
       type: object
+
+    QueueStats:
+      required:
+        - num_ridership_readings
+        - num_fuel_readings
+      properties:
+        num_ridership_readings:
+          type: integer
+          example: 3
+        num_fuel_readings:
+          type: integer
+          example: 3

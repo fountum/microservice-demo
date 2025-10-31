@@ -55,7 +55,7 @@ components:
             recorded_timestamp:
               type: string
               format: date-time
-              example: "2016-08-29T09:12:33.001Z"
+              example: "2016-08-29 09:12:33"
       type: object
 
     RidershipReadingBatch:
@@ -75,7 +75,7 @@ components:
         batch_timestamp:
           type: string
           format: date-time
-          example: "2016-08-29T09:12:33.001Z"
+          example: "2016-08-29 09:12:33"
         readings:
           type: array
           items:
@@ -95,7 +95,7 @@ components:
         recorded_timestamp:
           type: string
           format: date-time
-          example: "2016-08-29T09:12:33.001Z"
+          example: "2016-08-29 09:12:33"
       type: object
 
     FuelReadingBatch:
@@ -115,7 +115,7 @@ components:
         batch_timestamp:
           type: string
           format: date-time
-          example: "2016-08-29T09:12:33.001Z"
+          example: "2016-08-29 09:12:33"
         readings:
           type: array
           items:

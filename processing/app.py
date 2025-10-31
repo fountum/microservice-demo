@@ -12,7 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
 
-date_format = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 # loading config
@@ -30,7 +30,7 @@ logger = logging.getLogger('basicLogger')
 def populate_stats():
     logger.info(f'Starting routine stats generating')
 
-    today = datetime.strftime(datetime.now(), date_format)
+    today = datetime.strftime(datetime.now(), DATE_FORMAT)
     # load old stats
     if not os.path.isfile(app_config["datastore"]["filename"]):
         stats = {}
@@ -47,7 +47,7 @@ def populate_stats():
     
     # get data from storage service
     range = {
-        "start_timestamp":datetime.strptime(stats["last_updated"], date_format),
+        "start_timestamp":datetime.strptime(stats["last_updated"], DATE_FORMAT),
         "end_timestamp": today
     }
     

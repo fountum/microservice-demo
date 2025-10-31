@@ -1,19 +1,17 @@
+import datetime
 import json
 import logging.config
 import uuid
 import connexion
 from connexion import NoContent
-import os
-import httpx
+from pykafka import KafkaClient
 import yaml
 
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
 
 MAX_BATCH_EVENTS = 5
-RIDERSHIP_FILE = 'ridership.json'
-FUEL_FILE = 'fuel.json'
-
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 # load configs
 with open('app_conf.yaml', 'r') as f:
     app_config = yaml.safe_load(f.read())
@@ -24,6 +22,11 @@ with open('log_conf.yaml', 'r') as f:
 
 # logging
 logger = logging.getLogger('basicLogger')
+
+# Kafka
+client = KafkaClient(hosts=f'{app_config["events"]["hostname"]}:{app_config["events"]["port"]}')
+topic = client.topics[str.encode(app_config['events']['topic'])]
+producer = topic.get_sync_producer()
 
 # /bus/ridership
 def report_ridership_reading(body):
@@ -39,11 +42,16 @@ def report_ridership_reading(body):
         data['recorded_timestamp']=d['recorded_timestamp']
         data['stop_id']=d['stop_id']
         data['passengers_boarded']=d['passengers_boarded']
-        print(data)
-        r= httpx.post(app_config['events']['ridership'],json=data)
+        msg = { "type": "ridership",
+            "datetime": datetime.datetime.now().strftime(DATE_FORMAT),
+            "payload": data
+        }
+        msg_str = json.dumps(msg)
+        producer.produce(msg_str.encode('utf-8'))
+        # r= httpx.post(app_config['events']['ridership'],json=data)
         
-    logger.debug(f'Response for event ridership {trace_id=}, {r.status_code=}')
-    return NoContent,r.status_code
+    logger.debug(f'Response for event ridership {trace_id=}')
+    return NoContent,201
 
 # /bus/fuel
 def report_fuel_reading(body):
@@ -58,11 +66,17 @@ def report_fuel_reading(body):
         data['trace_id']=trace_id
         data['recorded_timestamp']=d['recorded_timestamp']
         data['fuel_litres']=d['fuel_litres']
-        
-        r= httpx.post(app_config["events"]['fuel'],json=data)
-    logger.debug(f'Response for event fuel {trace_id=}, {r.status_code=}')
 
-    return NoContent,r.status_code
+        msg = { "type": "fuel",
+            "datetime": datetime.datetime.now().strftime(DATE_FORMAT),
+            "payload": data
+        }
+        msg_str = json.dumps(msg)
+        producer.produce(msg_str.encode('utf-8'))
+        # r= httpx.post(app_config["events"]['fuel'],json=data)
+    logger.debug(f'Response for event fuel {trace_id=}')
+
+    return NoContent,201
 
 
 if __name__ == "__main__":
