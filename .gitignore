@@ -13,3 +13,5 @@ auth/views/reminder/*
 auth/.env
 auth/package-lock.json
 auth/README.md
+
+reports/*
