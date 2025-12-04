@@ -15,3 +15,5 @@ auth/package-lock.json
 auth/README.md
 
 reports/*
+
+k8s/old/*

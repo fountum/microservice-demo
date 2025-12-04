@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: web-svr
+  name: web-svr-deploy
+  namespace: bakery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-svr
+  template:
+    metadata:
+      labels:
+        app: web-svr
+    spec:
+      containers:
+        - image: fountum/bakery-caddy:latest
+          name: web-server
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          imagePullPolicy: Always
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svr-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 31111
+    protocol: TCP
+  selector:
+    app: web-svr

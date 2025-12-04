@@ -1,3 +1,4 @@
+# 
 apiVersion: v1
 data:
   MYSQL_CONN: mysql://auth:WORMSandDIRTandSAND@service-db:3306/auth_db
