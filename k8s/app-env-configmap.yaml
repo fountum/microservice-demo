@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  MYSQL_CONN: mysql://auth:WORMSandDIRTandSAND@service-db:3306/auth_db
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: auth-app-env
+  name: app-env
