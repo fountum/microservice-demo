@@ -2,8 +2,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: service-db
+    app: service-db
   name: service-db
+  namespace: bakery
 spec:
   accessModes:
     - ReadWriteOnce

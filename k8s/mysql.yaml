@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql
+  name: mysql-deploy
+  namespace: bakery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: mysql-env
+          image: fountum/mysql-custom:latest
+          name: service-db
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: service-db
+      restartPolicy: Always
+      volumes:
+        - name: service-db
+          persistentVolumeClaim:
+            claimName: service-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+  namespace: bakery
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
